@@ -69,7 +69,17 @@ int main(int argc, char **argv)
     {
       // 默认值，以三通道BGR格式读取图像
       // 对应于参数 0：IMREAD_GRAYSCALE 表示以灰度格式读取图像
-      cv::Mat image = cv::imread(path + "/cam" + std::to_string(i) + "/" + *cam_iterators.at(i), cv::IMREAD_UNCHANGED);
+      cv::Mat image, image_semantic;
+      if (i == 0)
+      {
+        image = cv::imread(path + "/cam" + std::to_string(i) + "/" + *cam_iterators.at(i), cv::IMREAD_UNCHANGED);
+        image_semantic = cv::imread(path + "/semantic" + "/" + *cam_iterators.at(i), cv::IMREAD_UNCHANGED);
+      }
+      else
+      {
+        image = cv::imread(path + "/cam" + std::to_string(i) + "/" + *cam_iterators.at(i), cv::IMREAD_UNCHANGED);
+      }
+      // cv::Mat image = cv::imread(path + "/cam" + std::to_string(i) + "/" + *cam_iterators.at(i), cv::IMREAD_UNCHANGED);
       std::string nanoseconds = cam_iterators.at(i)->substr(cam_iterators.at(i)->size() - 13, 9);
       std::string seconds = cam_iterators.at(i)->substr(0, cam_iterators.at(i)->size() - 13);
       t = double(std::stoi(seconds)) + double(std::stoi(nanoseconds)) / 10e8;
@@ -134,10 +144,11 @@ int main(int argc, char **argv)
       // dor depth -> encoding for MONO16
       {
         uint seq = 0;
-        cv_bridge::CvImage ros_image;
-        ros_image.image = image;
         if (i == 0)
         {
+          cv_bridge::CvImage ros_image, ros_image_semantic;
+
+          ros_image.image = image;
           // ros_image.encoding = "mono8";
           // 大写的BGR8会有问题
           ros_image.encoding = "bgr8";
@@ -146,11 +157,24 @@ int main(int argc, char **argv)
           ros_image_msg->header.seq = seq;
           ros_image_msg->header.stamp = ros::Time(t);
           ros_image_msg->header.frame_id = "frame";
+
+          ros_image_semantic.image = image_semantic;
+          ros_image_semantic.encoding = "bgr8";
+          sensor_msgs::ImagePtr ros_image_semantic_msg;
+          ros_image_semantic_msg = ros_image_semantic.toImageMsg();
+          ros_image_semantic_msg->header.seq = seq;
+          ros_image_semantic_msg->header.stamp = ros::Time(t);
+          ros_image_semantic_msg->header.frame_id = "frame";
+
           bag_out.write("/cam0/image_raw", ros::Time(t), ros_image_msg);
+          bag_out.write("/semantic/image_raw", ros::Time(t), ros_image_semantic_msg);
         }
         else if (i == 1)
         {
-          ros_image.encoding = "mono16";
+          cv_bridge::CvImage ros_image;
+          ros_image.image = image;
+          // for the depth image we should encoding as 16UC1 mode. 
+          ros_image.encoding = "16UC1";
           sensor_msgs::ImagePtr ros_image_msg;
           ros_image_msg = ros_image.toImageMsg();
           ros_image_msg->header.seq = seq;
@@ -225,7 +249,7 @@ void open_file(std::string path, std::vector<std::vector<std::string>> &image_na
       // the filenames are not going to be sorted. So do this here
       std::sort(image_names.at(i).begin(), image_names.at(i).end());
       // there are three error image_name. It may not be necessary here.
-      image_names.at(i).erase(image_names.at(i).begin(), image_names.at(i).begin() + 3);
+      // image_names.at(i).erase(image_names.at(i).begin(), image_names.at(i).begin() + 3);
     }
   }
 }

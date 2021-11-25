@@ -29,27 +29,33 @@ In your ROS_PACKAGE_PATH (check your environment variable ROS_PACKAGE_PATH):
 ## DATASET:
 The example uses a system with two cameras and one IMU:
 
-#+-- dataset-dir
-#    +-- cam0
-#    │   +-- 1385030208726607500.png
-#    │   +--      ...
-#    │   \-- 1385030212176607500.png
-#    +-- cam1
-#    │   +-- 1385030208726607500.png
-#    │   +--      ...
-#    │   \-- 1385030212176607500.png
-#    +-- imu0
-#    |   data.csv
+## +-- dataset-dir
+```
+       +-- cam0
+       │   +-- 1385030208726607500.png
+       │   +--      ...
+       │   \-- 1385030212176607500.png
+       +-- cam1
+       │   +-- 1385030208726607500.png
+       │   +--      ...
+       │   \-- 1385030212176607500.png
+       +-- imu0
+       |   data.csv
+```
 
 ## solve the compile problem 
   Add dynamic library link. 
 
 ## run demo 
 ```bash
-rosrun ImageIMU_to_rosbag ImageIMU_to_rosbag /home/bruce/study/rosbagtofile/src/output /home/bruce/dataset/test.bag 2
+rosrun ImageIMU_to_rosbag ImageIMU_to_rosbag /home/bruce/dataset/temp/output /home/bruce/dataset/test.bag 2
 
 ```
 
-
 ## reference
 [github](https://github.com/QingfengLi-hit/ImageIMU_to_rosbag)
+
+## matters 
+The branch multi_camera_num is that the rgb image has the correspond semantic image, they have same timestamp.  
+So, add a semantic/image_raw topic.  
+After testing, it can be executed correctly.  
