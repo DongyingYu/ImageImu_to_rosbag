@@ -28,19 +28,19 @@ In your ROS_PACKAGE_PATH (check your environment variable ROS_PACKAGE_PATH):
  
 ## DATASET:
 The example uses a system with two cameras and one IMU:
-
-#+-- dataset-dir
-#    +-- cam0
-#    │   +-- 1385030208726607500.png
-#    │   +--      ...
-#    │   \-- 1385030212176607500.png
-#    +-- cam1
-#    │   +-- 1385030208726607500.png
-#    │   +--      ...
-#    │   \-- 1385030212176607500.png
-#    +-- imu0
-#    |   data.csv
-
+```
++-- dataset-dir
+    +-- cam0
+    │   +-- 1385030208726607500.png
+    │   +--      ...
+    │   \-- 1385030212176607500.png
+    +-- cam1
+    │   +-- 1385030208726607500.png
+    │   +--      ...
+    │   \-- 1385030212176607500.png
+    +-- imu0
+    |   data.csv
+```
 ## solve the compile problem 
   Add dynamic library link. 
 

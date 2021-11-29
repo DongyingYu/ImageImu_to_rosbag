@@ -150,7 +150,8 @@ int main(int argc, char **argv)
         }
         else if (i == 1)
         {
-          ros_image.encoding = "mono16";
+          // For depth image, the encoding type should be 16UC1. 
+          ros_image.encoding = "16UC1";
           sensor_msgs::ImagePtr ros_image_msg;
           ros_image_msg = ros_image.toImageMsg();
           ros_image_msg->header.seq = seq;
@@ -225,7 +226,7 @@ void open_file(std::string path, std::vector<std::vector<std::string>> &image_na
       // the filenames are not going to be sorted. So do this here
       std::sort(image_names.at(i).begin(), image_names.at(i).end());
       // there are three error image_name. It may not be necessary here.
-      image_names.at(i).erase(image_names.at(i).begin(), image_names.at(i).begin() + 3);
+      // image_names.at(i).erase(image_names.at(i).begin(), image_names.at(i).begin() + 3);
     }
   }
 }
